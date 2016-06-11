@@ -1,4 +1,4 @@
-from Tkinter import *
+from tkinter import *
 from random import randint
 from time import sleep, time
 from math import pi, atan2
@@ -16,7 +16,7 @@ Autoliste = list()
 Autorichtung = list()
 
 # adjusting for the direction with the size
-def directionallyv(xv, yv, s):
+def directionally(xv, yv, s):
     d = atan2(xv, yv)
     if   d == 0    : 
         return (xv - s /2, yv)
@@ -126,10 +126,10 @@ erstelleAuto("unten")
 erstelleAuto("rechts")
 erstelleAuto("links")
 
-Ampelliste.append(Ampel(600, 500, "green", c))
-Ampelliste.append(Ampel(600, 300, "green", c))
-Ampelliste.append(Ampel(400, 500, "green", c))
-Ampelliste.append(Ampel(400, 300, "green", c))
+Ampelliste.append(Ampel(515, 500, "green", c))
+Ampelliste.append(Ampel(600, 385, "green", c))
+Ampelliste.append(Ampel(400, 415, "green", c))
+Ampelliste.append(Ampel(485, 300, "green", c))
 
 
 window.update()
@@ -138,6 +138,10 @@ for i in range(0, 1500, 1):
     bewegeAutos()
     sleep(0.02)
 
+
+
+
+        
 
 
 

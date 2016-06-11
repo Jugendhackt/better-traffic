@@ -1,7 +1,9 @@
 from Tkinter import *
 from random import randint
 from time import sleep, time
-        
+from math import pi, atan2
+
+
 HEIGHT = 800
 WIDTH = 1000
 window = Tk()
@@ -12,6 +14,22 @@ c.pack()
 Ampelliste = list()
 Autoliste = list()
 Autorichtung = list()
+
+# adjusting for the direction with the size
+def directionallyv(xv, yv, s):
+    d = atan2(xv, yv)
+    if   d == 0    : 
+        return (xv - s /2, yv)
+    elif d == pi/2 : 
+        return (xv, yv + s /2)
+    elif d == pi   : 
+        return (xv + s /2, yv)
+    elif d == -pi  : 
+        return (xv + s /2, yv) 
+    elif d == -pi/2: 
+        return (xv, yv - s /2)
+    else: return (xv, yv)
+
 
 
 class Auto:
@@ -42,7 +60,10 @@ class Auto:
 
     # drawing the car on the canvas
     def draw(self, c):
-        c.coords(self.gfx, self.xord, self.yord, self.xord + self.size, self.yord + self.size)
+        (xa, ya) = directionally(self.xvel, self.yvel, self.size)
+        nxord = self.xord + xa
+        nyord = self.yord + ya
+        c.coords(self.gfx, nxord, nyord, nxord + self.size, nyord + self.size)
 
 
 # creates a car, in possibly one of the four directions:
@@ -50,19 +71,19 @@ class Auto:
 def erstelleAuto(Richtung):
     if Richtung == "oben":
         a = Auto(485, 0, c)
-        a.accelerate(0, 5)
+        a.accelerate(0, 0.5)
         Autoliste.append(a)
     elif Richtung == "rechts":
         a = Auto(970, 385, c)
-        a.accelerate(-5, 0)
+        a.accelerate(-0.5, 0)
         Autoliste.append(a)
     elif Richtung == "unten":
         a = Auto(485, 770, c)
-        a.accelerate(0, -5)
+        a.accelerate(0, -0.5)
         Autoliste.append(a)
     elif Richtung == "links":
         a = Auto(0, 385, c)
-        a.accelerate(5, 0)
+        a.accelerate(0.5, 0)
         Autoliste.append(a)
     window.update()
     Autorichtung.append(Richtung)
@@ -98,7 +119,7 @@ erstelleAuto("links")
 
 window.update()
 
-for i in range(0, 100, 1):
+for i in range(0, 1500, 1):
     bewegeAutos()
     sleep(0.01)
 

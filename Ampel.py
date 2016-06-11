@@ -1,4 +1,4 @@
-from tkinter import *
+from Tkinter import *
 from random import randint
 from time import sleep, time
         
@@ -12,35 +12,65 @@ c.pack()
 Ampelliste = list()
 Autoliste = list()
 Autorichtung = list()
+
+
+class Auto:
+
+    size = 30
+    xord = 0
+    yord = 0
+    xvel = 0
+    yvel = 0
+    gfx  = None
+
+    def __init__(self, x, y, c):
+        self.xord = x
+        self.yord = y
+        self.gfx  = c.create_rectangle(x, y, x + self.size, y + self.size, fill="blue")
+
+    def accelerate(self, x, y):
+        self.xvel += x
+        self.yvel += y
+
+    def drive(self):
+        self.xord += self.xvel
+        self.yord += self.yvel
+
+    def draw(self, c):
+        c.coords(self.gfx, self.xord, self.yord, self.xord + self.size, self.yord + self.size)
+        pass
+
+
 def erstelleAuto(Richtung):
     if Richtung == "oben":
-        Autografik = c.create_rectangle(485, 0, 515, 30, fill="blue")
-        Autoliste.append(Autografik)
+        a = Auto(485, 0, c)
+        a.accelerate(0, 5)
+        Autoliste.append(a)
     elif Richtung == "rechts":
-        Autografik = c.create_rectangle(970, 385, 1000, 415, fill="blue")
-        Autoliste.append(Autografik)
+        a = Auto(970, 385, c)
+        a.accelerate(-5, 0)
+        Autoliste.append(a)
     elif Richtung == "unten":
-        Autografik = c.create_rectangle(485, 770, 515, 800, fill="blue")
-        Autoliste.append(Autografik)
+        a = Auto(485, 770, c)
+        a.accelerate(0, -5)
+        Autoliste.append(a)
     elif Richtung == "links":
-        Autografik = c.create_rectangle(0, 385, 30, 415, fill="blue")
-        Autoliste.append(Autografik)
+        a = Auto(0, 385, c)
+        a.accelerate(5, 0)
+        Autoliste.append(a)
     window.update()
     Autorichtung.append(Richtung)
+
 def bewegeAutos():
     for i in range(len(Autoliste)):
-        if Autorichtung[i] == "oben":
-            c.move(Autoliste[i], 0, 5)
-        elif Autorichtung[i] == "rechts":
-            c.move(Autoliste[i], -5, 0)
-        elif Autorichtung[i] == "unten":
-            c.move(Autoliste[i], 0, -5)
-        elif Autorichtung[i] == "links":
-            c.move(Autoliste[i], 5, 0)
-        window.update()
+        Autoliste[i].drive()
+        Autoliste[i].draw(c)
+    window.update()
+
 def erstelleAmpel(x, y):
     Ampelgrafik = c.create_oval(x-15, y-15, x+15, y+15, fill="red")
     Ampelliste.append(Ampelgrafik)
+
 def aenderAmpel(Farbe, Ampelgrafik):
     c.itemconfig(Ampelgrafik, fill = Farbe)
 
@@ -50,20 +80,18 @@ erstelleAmpel(600, 500)
 erstelleAmpel(600, 300)
 erstelleAmpel(400, 500)
 erstelleAmpel(400, 300)
-window.update()
 
 erstelleAuto("oben")
 erstelleAuto("unten")
 erstelleAuto("rechts")
 erstelleAuto("links")
 
+window.update()
+
 for i in range(0, 100, 1):
     bewegeAutos()
-    sleep(0.1)
+    sleep(0.01)
 
-
-
-        
 
 
 

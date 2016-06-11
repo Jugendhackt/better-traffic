@@ -16,6 +16,7 @@ Autorichtung = list()
 
 class Auto:
 
+    # local variables of the car
     size = 30
     xord = 0
     yord = 0
@@ -23,24 +24,29 @@ class Auto:
     yvel = 0
     gfx  = None
 
+    # initiating with the upper left coordinate and the canvas
     def __init__(self, x, y, c):
         self.xord = x
         self.yord = y
         self.gfx  = c.create_rectangle(x, y, x + self.size, y + self.size, fill="blue")
 
+    # accelerating the car in this direction
     def accelerate(self, x, y):
         self.xvel += x
         self.yvel += y
 
+    # letting the car drive
     def drive(self):
         self.xord += self.xvel
         self.yord += self.yvel
 
+    # drawing the car on the canvas
     def draw(self, c):
         c.coords(self.gfx, self.xord, self.yord, self.xord + self.size, self.yord + self.size)
-        pass
 
 
+# creates a car, in possibly one of the four directions:
+#   "oben", "rechts", "unten", "links"
 def erstelleAuto(Richtung):
     if Richtung == "oben":
         a = Auto(485, 0, c)
@@ -61,6 +67,7 @@ def erstelleAuto(Richtung):
     window.update()
     Autorichtung.append(Richtung)
 
+# moving all the prior created cars and redraws them
 def bewegeAutos():
     for i in range(len(Autoliste)):
         Autoliste[i].drive()
@@ -74,6 +81,9 @@ def erstelleAmpel(x, y):
 def aenderAmpel(Farbe, Ampelgrafik):
     c.itemconfig(Ampelgrafik, fill = Farbe)
 
+
+
+# debugging world
 Strasse1 = c.create_line(500, 0, 500, 800)
 Strasse2 = c.create_line(0, 400, 1000, 400)
 erstelleAmpel(600, 500)

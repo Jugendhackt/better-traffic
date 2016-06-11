@@ -180,12 +180,20 @@ for i in range(0, 1500, 1):
     loop()
     sleep(0.05)
 
+def nextStep():
+    if step == 0:
 
+    if step == 1:
 
+    if step == 2:
 
-
-
-
-
-
-
+def Animation1():
+    
+    pass
+def Animation2():
+    pass
+def Animation3():
+    pass
+                
+    
+    

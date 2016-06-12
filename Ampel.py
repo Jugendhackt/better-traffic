@@ -14,7 +14,6 @@ c.pack()
 
 Ampelliste = list()
 Autoliste = list()
-Autorichtung = list()
 
 
 # adjusting for the direction with the size
@@ -87,13 +86,13 @@ class Auto(object):
 def erstelleAuto(x, y, Richtung):
     a  = Auto(x,y,c)
     if Richtung == "oben":
-        a.accelerate(0, 5)
+        a.accelerate(0, 0.5)
     elif Richtung == "rechts":
-        a.accelerate(-5, 0)
+        a.accelerate(-0.5, 0)
     elif Richtung == "unten":
-        a.accelerate(0, -5)
+        a.accelerate(0, -0.5)
     elif Richtung == "links":
-        a.accelerate(5, 0)
+        a.accelerate(0.5, 0)
     Autoliste.append(a)
     window.update()
 
@@ -161,7 +160,7 @@ CreateCarButton.place(x = 25, y = 50, width = 75, height = 25)
 
 
 # moving all the prior created cars and redraws them, as well as redraws the Ampels ... ?
-def loop():
+def loop(tick):
     for auto in Autoliste:
         auto.drive()
         auto.draw(c)
@@ -170,30 +169,43 @@ def loop():
     window.update()
 
 
-Ampel4.setAmpelfarbe("green", c)
 
-createRight()
-
-
-
-for i in range(0, 1500, 1):
-    loop()
-    sleep(0.05)
 
 def nextStep():
     if step == 0:
-
+        Animation1()
     if step == 1:
-
+        Animation2()
     if step == 2:
+        Animation3()
 
 def Animation1():
-    
-    pass
+    createLeft()
+    for i in range(0, 2016, 1):
+        loop(i)
+        sleep(0.0042)
+        if i == 600:
+            Ampel3.setAmpelfarbe("green", c)
+        if i == 1008:
+            Ampel3.setAmpelfarbe("red", c)
+    Autoliste = list()
 def Animation2():
+    createRight()
+    for i in range(0, 3016, 1):
+        if i == 30:
+            createDown()
+        if i == 120:
+            createDown()
+        if i == 210:
+            createDown()
+        loop(i)
+        sleep(0.0042)
+          #  Ampel3.setAmpelfarbe("green", c)
+          #  Ampel3.setAmpelfarbe("red", c)
     pass
 def Animation3():
     pass
                 
     
     
+Animation2()

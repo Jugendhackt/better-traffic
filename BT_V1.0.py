@@ -212,7 +212,7 @@ def nextStep():
     global step
     if step == 0 :
         StepButton.config(command = nothing)
-        Animation3()
+        Animation1()
         StepButton.config(command = nextStep)
     elif step == 1  :
         StepButton.config(command = nothing)
@@ -223,8 +223,11 @@ def nextStep():
         Animation3()
         StepButton.config(command = nextStep)
 
-tickLabel = Label(window, text = str(step))
+tickLabel = Label(window, text = str(worldTime))
 tickLabel.place(x = 25, y = 100, width = 75, height = 25)
+
+stepLabel = Label(window, text = str(step))
+stepLabel.place(x = 25, y = 150, width = 75, height = 25)
 
 StepButton = Button(window, text = "Next", command = nextStep)
 StepButton.place(x = 25, y = 50, width = 75, height = 25)
@@ -244,6 +247,7 @@ def Animation1():
             Ampel3.setAmpelfarbe("red", c)
         worldTime += 1
         tickLabel.config(text = str(worldTime))
+        stepLabel.config(text = str(step))
     Autoliste = list()
 
 
@@ -274,6 +278,7 @@ def Animation2():
         sleep(0.0042)
         worldTime += 1
         tickLabel.config(text = str(worldTime))
+        stepLabel.config(text = str(step))
     Autoliste = list()
 
 
@@ -300,6 +305,7 @@ def Animation3():
         sleep(0.0042)
         worldTime += 1
         tickLabel.config(text = str(worldTime))
+        stepLabel.config(text = str(step))
     Autoliste = list()
     pass
 window.mainloop()

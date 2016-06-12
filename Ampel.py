@@ -43,12 +43,13 @@ class Auto(object):
     yvel = 0
     gfx  = None
     dire = None
+    driv = True
 
     # initiating with the upper left coordinate and the canvas
-    def __init__(self, x, y, c):
+    def __init__(self, x, y, c, color="blue"):
         self.xord = x
         self.yord = y
-        self.gfx  = c.create_rectangle(x, y, x + self.size, y + self.size, fill="blue")
+        self.gfx  = c.create_rectangle(x, y, x + self.size, y + self.size, fill=color)
 
     # returns the current position of the car
     def getPosition(self):
@@ -61,11 +62,13 @@ class Auto(object):
 
     # absolutely stops the car
     def stop(self):
+        self.driv = False
         self.dire = (self.xvel, self.yvel)
         self.xvel = 0
         self.yvel = 0
 
     def go(self):
+        self.driv = True
         self.xvel, self.yvel = self.dire
 
     # letting the car drive
@@ -75,16 +78,29 @@ class Auto(object):
 
     # drawing the car on the canvas
     def draw(self, c):
-        (xa, ya) = directionally(self.xvel, self.yvel, self.size)
-        nxord = self.xord + xa
-        nyord = self.yord + ya
-        c.coords(self.gfx, nxord, nyord, nxord + self.size, nyord + self.size)
+        if self.driv:
+            (xa, ya) = directionally(self.xvel, self.yvel, self.size)
+            nxord = self.xord + xa
+            nyord = self.yord + ya
+            c.coords(self.gfx, nxord, nyord, nxord + self.size, nyord + self.size)
+
+"""
+    def setColor(self, color, canv):
+        self.setInv(canv)
+        self.gfx = canv.create_rectangle(x, y, x + self.size, y + self.size, fill=color)
+
+    def setInv(self, c):
+        self.driv = True
+        self = Auto(- 3000, -3000, c)
+        self.draw(c)
+        self.driv = False
+"""
 
 
 # creates a car, in possibly one of the four directions:
 #   "oben", "rechts", "unten", "links"
-def erstelleAuto(x, y, Richtung):
-    a  = Auto(x,y,c)
+def erstelleAuto(x, y, Richtung, color="blue"):
+    a  = Auto(x,y,c, color)
     if Richtung == "oben":
         a.accelerate(0, 0.5)
     elif Richtung == "rechts":
@@ -95,19 +111,33 @@ def erstelleAuto(x, y, Richtung):
         a.accelerate(0.5, 0)
     Autoliste.append(a)
     window.update()
+    return Autoliste[len(Autoliste) -1]
 
 
 def createUp():
-    erstelleAuto(485, 0, "oben")
+    return erstelleAuto(485, 0, "oben")
 
 def createRight():
-    erstelleAuto(970, 385, "rechts")
+    return erstelleAuto(970, 385, "rechts")
 
 def createLeft():
-    erstelleAuto(0, 385, "links")
+    return erstelleAuto(0, 385, "links")
 
 def createDown():
-    erstelleAuto(485, 770, "unten")
+    return erstelleAuto(485, 770, "unten")
+
+def createUpNSF():
+    return erstelleAuto(485, 0, "oben", "yellow")
+
+def createRightNSF():
+    return erstelleAuto(970, 385, "rechts", "yellow")
+
+def createLeftNSF():
+    return erstelleAuto(0, 385, "links", "yellow")
+
+def createDownNSF():
+    return erstelleAuto(485, 770, "unten", "yellow")
+
 
 
 class Ampel(object):
@@ -131,6 +161,12 @@ class Ampel(object):
     # returns the current state or color of the Ampel
     def getAmpelfarbe(self):
         return self.farb
+
+    def change(self, c):
+        if self.farb == "green":
+            self.setAmpelfarbe("red", c)
+        if self.farb == "red":
+            self.setAmpelfarbe("green", c)
 
 
 # debugging world
@@ -179,9 +215,10 @@ def nextStep():
     if step == 2:
         Animation3()
 
+
 def Animation1():
     createLeft()
-    for i in range(0, 2016, 1):
+    for i in range(0, 2016):
         loop(i)
         sleep(0.0042)
         if i == 600:
@@ -189,23 +226,55 @@ def Animation1():
         if i == 1008:
             Ampel3.setAmpelfarbe("red", c)
     Autoliste = list()
+
+
 def Animation2():
-    createRight()
-    for i in range(0, 3016, 1):
-        if i == 30:
+    begin2 = 230
+    r = createRight()
+    for i in range(0, 3016):
+        if i == begin2 + 30:
             createDown()
-        if i == 120:
+        if i == begin2 + 120:
             createDown()
-        if i == 210:
+        if i == begin2 + 210:
             createDown()
+        if i == 700:
+            r.stop()
+            Ampel1.setAmpelfarbe("green", c)
+        if i == 1200:
+            Ampel1.setAmpelfarbe("red", c)
+            Ampel4.setAmpelfarbe("green", c)
+            r.go()
+        if i == 1500:
+            Ampel4.setAmpelfarbe("red", c)
         loop(i)
         sleep(0.0042)
-          #  Ampel3.setAmpelfarbe("green", c)
-          #  Ampel3.setAmpelfarbe("red", c)
-    pass
+    Autoliste = list()
+
+
 def Animation3():
+    begin3 = 230
+    r = createRightNSF()
+    for i in range(0, 2700):
+        if i == begin3:
+            createUp()
+        if i == 700:
+            r.stop()
+            Ampel2.setAmpelfarbe("green", c)
+        if i == 1200:
+            r.go()
+            Ampel2.setAmpelfarbe("red", c)
+            Ampel4.setAmpelfarbe("green", c)
+        if i == 1500:
+            Ampel4.setAmpelfarbe("red", c)
+        loop(i)
+        sleep(0.0042)
+    Autoliste = list()
+
     pass
-                
-    
-    
-Animation2()
+
+
+
+Animation3()
+
+
